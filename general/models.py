@@ -28,7 +28,7 @@ class UserProfile(models.Model):
     bio = models.TextField(blank=True)
     interests = TaggableManager( verbose_name='Interests', blank=True )
     location = models.CharField( max_length=100, blank=True )
-    #phone = models.CharField( max_length=20, blank=True, null=True )
+    phone = models.CharField( max_length=20, blank=True, null=True )
 
     #city = models.CharField( max_length=50, blank=True )
     #state = models.CharField( max_length=50, blank=True )
