@@ -26,12 +26,11 @@ nginx {
   depends {
     uwsgi {
       delay 500
-      propagate true
     }
   }
 }
 
-smptpgate {
+smtpgate {
   command gaggled_smtpgate
   argv "-c {{code_dir}}/gaggled.conf"
 }

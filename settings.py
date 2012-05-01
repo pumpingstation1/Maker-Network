@@ -8,12 +8,6 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
-)
-
-MANAGERS = ADMINS
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -102,14 +96,9 @@ LOGIN_REDIRECT_URL = '/'
 #COMMENTS_APP = 'threadedcomments'
 #COMMENT_MAX_LENGTH = 3000
 
-EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-EMAIL_HOST = 'email-smtp.us-east-1.amazonaws.com'
-EMAIL_PORT = 465
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-EMAIL_USE_TLS = True
-
 try:
     from local_settings import *
 except ImportError:
     pass
+
+MANAGERS = ADMINS
