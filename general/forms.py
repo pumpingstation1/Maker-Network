@@ -14,7 +14,7 @@ class UserProfileForm(forms.ModelForm):
 
         self.fields.keyOrder = [
             'first_name', 'last_name', 'email',
-            'url', 'bio', 'interests', 'location', 'avatar', 'bg_image'
+            'url', 'phone', 'bio', 'interests', 'location', 'avatar', 'bg_image'
             ]
 
     def save(self, *args, **kw):
