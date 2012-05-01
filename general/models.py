@@ -23,12 +23,13 @@ class Skill(models.Model):
             Q(title__icontains=q)
             )
 
-
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     bio = models.TextField(blank=True)
     interests = TaggableManager( verbose_name='Interests', blank=True )
     location = models.CharField( max_length=100, blank=True )
+    #phone = models.CharField( max_length=20, blank=True, null=True )
+
     #city = models.CharField( max_length=50, blank=True )
     #state = models.CharField( max_length=50, blank=True )
     #postal_code = models.CharField( max_length=25, blank=True )
