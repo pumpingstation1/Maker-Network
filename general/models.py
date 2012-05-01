@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 from django.core.urlresolvers import reverse
 from taggit.managers import TaggableManager
-
+import time
 
 class Skill(models.Model):
     #user_profiles = models.ManyToManyField(UserProfile, null=True, blank=True)
@@ -82,6 +82,77 @@ class Organization(models.Model):
             Q(postal_code__icontains=q)
             )
 
+class WorkingGroup(models.Model) :
+    name = models.CharField(max_length=64, unique=True)
+    organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
+    members = models.ManyToManyField(User, related_name="working_groups")
+
+    def __unicode__(self):
+        return self.name
+
+class Project(models.Model) :
+    name = models.CharField(max_length=64)
+    workinggroup = models.ForeignKey(WorkingGroup, on_delete=models.PROTECT)
+
+    class Meta :
+        unique_together = (("name", "workinggroup"))
+
+    def __unicode__(self):
+        return '%s\'s %s' % (self.workinggroup, self.name)
+
+class TaskBase(models.Model) :
+    STATE_NEW = 0
+    STATE_WONT = 1
+    STATE_DONE = 2
+    STATE_REOPENED = 3
+
+    description = models.TextField(blank=True, null=True)
+    state = models.IntegerField(default=STATE_NEW, blank=True, null=True, choices=[
+      (STATE_NEW, 'New'),
+      (STATE_WONT, 'Won\'t Fix'),
+      (STATE_DONE, 'Done'),
+      (STATE_REOPENED, 'Reopened'),
+    ])
+
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+')
+    assignee = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, related_name='+')
+    ts = models.BigIntegerField()
+
+    class Meta :
+        abstract = True
+
+class Task(TaskBase) :
+    name = models.CharField(max_length=255)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT)
+
+    def __unicode__(self):
+        return 'Task %s in %s' % (self.name, self.project.name)
+
+class TaskLog(TaskBase) :
+    task = models.ForeignKey(Task, on_delete=models.PROTECT)
+    comment = models.TextField(blank=True, null=True)
+
+    def __unicode__(self):
+        return '%s task log on %s' % (self.creator, self.task)
+
+def log_change(sender, **kwargs):
+    """ Updates the Task with the info from the TaskLog """
+    if kwargs['created'] == False:
+        raise RuntimeError("one does not simply modify the task log.")
+
+    tasklog = kwargs['instance']
+    task = tasklog.task
+    if tasklog.description is not None :
+       task.description = tasklog.description
+    if tasklog.state is not None :
+       task.state = tasklog.state
+    if tasklog.assignee is not None :
+       task.assignee = tasklog.assignee
+
+    task.ts = long(time.time())
+    task.save()
+        
+post_save.connect(log_change, sender=TaskLog)
 
 class Resource(models.Model):
     name = models.CharField(max_length = 255)
@@ -103,3 +174,7 @@ admin.site.register(Resource)
 admin.site.register(Organization)
 admin.site.register(Skill)
 admin.site.register(UserProfile)
+admin.site.register(WorkingGroup)
+admin.site.register(Project)
+admin.site.register(Task)
+admin.site.register(TaskLog)
