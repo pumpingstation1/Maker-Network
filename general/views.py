@@ -9,13 +9,13 @@ from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.utils.decorators import method_decorator
 
+from django.contrib.auth.models import User
 import general.models as models
 import general.forms as forms
 
-
-@csrf_protect
 def view_profile(request, username):
-    return render_to_response('general/userprofile_detail.html', {}, context_instance=RequestContext(request))
+    user = get_object_or_404(User, username=username)
+    return render_to_response('general/userprofile_detail.html', locals(), context_instance=RequestContext(request))
 
 @csrf_protect
 @login_required

@@ -5,10 +5,17 @@
 {% endif %}
 <div class="row">
 <div class="span10">
-<h3>{{ user.get_full_name }}</h3>
+<h3>
+{% with user.get_full_name as fullname %}
+{% if fullname %} 
+{{ fullname|escape }}
+({% endif %}{{ user.username|escape }}{% if fullname %}){% endif %}
+{% endwith %}
+</h3>
 {% with user.get_profile as profile %}
-<p>{{ profile.bio }}</p>
-<p>{{ profile.interests.all|join:', ' }}</p>
+<h4>About Me</h4>
+<p>{{ profile.bio|escape }}</p>
+<p>Interests: {{ profile.interests.all|join:', '|escape }}</p>
 {% endwith %}
 <a href="{% url profile_edit %}">Edit your profile</a>
 </div>
@@ -17,7 +24,7 @@
 <h3>Skills</h3>
 <ul>
     {% for skill in user.get_profile.skills.all %}
-    <li>{{ skill.title }}</li>
+    <li>{{ skill.title|escape }}</li>
     {% endfor %}
     <li style="list-style-type: none;"><a href="{% url skill_list %}">Add more skills</a></li>
 </ul>
@@ -26,7 +33,7 @@
 <h3>Groups</h3>
 <ul>
     {% for org in user.organizations.all %}
-    <li><a href="{% url organization_detail org.id %}">{{ org.name }}</a></li>
+    <li><a href="{% url organization_detail org.id %}">{{ org.name|escape }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
