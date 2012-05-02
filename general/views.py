@@ -12,7 +12,7 @@ import general.models as models
 import general.forms as forms
 
 def view_profile(request, username):
-    user = get_object_or_404(User, username=username)
+    view_user = get_object_or_404(User, username=username)
     return render_to_response('general/userprofile_detail.html', locals(), context_instance=RequestContext(request))
 
 @csrf_protect
