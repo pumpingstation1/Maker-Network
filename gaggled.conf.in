@@ -11,6 +11,7 @@ gaggled {
     from  {{from_email}}
     to    {{admin_email}}
     helo  localhost
+    auto  true
   }
 }
 
@@ -28,9 +29,4 @@ nginx {
       delay 500
     }
   }
-}
-
-smtpgate {
-  command gaggled_smtpgate
-  argv "-c {{code_dir}}/gaggled.conf"
 }
