@@ -20,6 +20,10 @@ def view_profile(request, username):
 def edit_profile(request):
     return update_object(request, form_class=forms.UserProfileForm, object_id=request.user.get_profile().pk, extra_context={'user':request.user, })
 
+def view_workinggroup(request, id):
+    workinggroup = get_object_or_404(models.WorkingGroup, id=id)
+    return render_to_response('general/workinggroup_detail.html', locals(), context_instance=RequestContext(request))
+
 @csrf_protect
 @login_required
 def leave_organization(request, object_id):
