@@ -119,6 +119,9 @@ class Project(models.Model) :
     def can_user_multi(self, user, permissions) :
         cans = list()
         member = None
+        if user is None :
+            member = False
+        
         for p in permissions :
             if member is None and self.access != self.ACC_OPEN :
                 member = user in self.workinggroup.members.all()

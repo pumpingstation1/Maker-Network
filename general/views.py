@@ -27,7 +27,6 @@ def view_workinggroup(request, id):
     workinggroup = get_object_or_404(models.WorkingGroup, id=id)
     return render_to_response('general/workinggroup_detail.html', locals(), context_instance=RequestContext(request))
 
-@login_required
 def view_project(request, id):
     project = get_object_or_404(models.Project, id=id)
     
