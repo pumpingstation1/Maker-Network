@@ -40,6 +40,16 @@
     {% endfor %}
 </ul>
 {% endif %}
+
+{% if view_user.working_groups.all %}
+<h3>Working Groups</h3>
+<ul>
+    {% for workinggroup in view_user.working_groups.all %}
+    <li><a href="{% url workinggroup_view workinggroup.id %}">{{ workinggroup.name|escape }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 </div>
 </div>
 {% endblock content %}
