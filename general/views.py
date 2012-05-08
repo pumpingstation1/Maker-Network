@@ -99,6 +99,7 @@ def search(request):
         ('Resources', models.Resource.search(q)),
         ('Skills', models.Skill.search(q)),
         ('Working Groups', models.WorkingGroup.search(q)),
+        ('Projects', models.Project.search(q)),
     ]
 
     results = filter(lambda x: x[1].count() > 0, results)

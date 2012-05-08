@@ -157,6 +157,15 @@ class Project(models.Model) :
     def __unicode__(self):
         return '%s\'s %s' % (self.workinggroup, self.name)
 
+    @classmethod
+    def search(cls, q):
+        return cls.objects.all().distinct().filter(
+            Q(name__icontains=q)
+            )
+
+    def get_absolute_url(self):
+        return reverse('project_view', kwargs={'id': self.id})
+
 class TaskBase(models.Model) :
     STATE_NEW = 0
     STATE_WONT = 1
