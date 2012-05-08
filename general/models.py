@@ -99,6 +99,8 @@ class WorkingGroup(models.Model) :
 
 class Project(models.Model) :
     name = models.CharField(max_length=64)
+    description = models.TextField(blank = True)
+
     workinggroup = models.ForeignKey(WorkingGroup, on_delete=models.PROTECT)
 
     ACC_OPEN = 0
