@@ -113,6 +113,28 @@ class Project(models.Model) :
         (ACC_PRIVATE, "Private"),
     ]
 
+    P_READ = 1
+    P_WRITE = 2
+
+    def can_user_multi(self, user, permissions) :
+        cans = list()
+        member = None
+        for p in permissions :
+            if member is None and self.access != self.ACC_OPEN :
+                member = user in self.workinggroup.members.all()
+
+            if p == self.P_READ :
+                cans.append((self.access in [self.ACC_OPEN, self.ACC_WATCHABLE]) or member == True)
+            elif p == self.P_WRITE :
+                cans.append((self.access == self.ACC_OPEN) or member == True)
+            else :
+                cans.append(False)
+
+        return cans
+
+    def can_user(self, user, permission) :
+        return self.can_user_multi(user, [permission])[0]
+
     # everything about this project, including its existence and name, are invisible and inaccessible to people not 
     # members of the project.
     access = models.IntegerField(default=ACC_OPEN, choices=ACC_CHOICES)

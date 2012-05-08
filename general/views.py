@@ -30,8 +30,8 @@ def view_workinggroup(request, id):
 @login_required
 def view_project(request, id):
     project = get_object_or_404(models.Project, id=id)
-    if project.access == models.Project.ACC_PRIVATE :
-      if request.user not in project.workinggroup.members.all() :
+    
+    if not project.can_user(request.user, models.Project.P_READ) :
         raise Http404
     return render_to_response('general/project_detail.html', locals(), context_instance=RequestContext(request))
 
