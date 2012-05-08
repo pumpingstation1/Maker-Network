@@ -83,11 +83,14 @@ class Organization(models.Model):
             )
 
 class WorkingGroup(models.Model) :
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=64)
     organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
     members = models.ManyToManyField(User, related_name="working_groups")
     # membership can only be managed by people who are already in the working group. people cannot add themselves.
     closed = models.BooleanField(default=False)
+
+    class Meta :
+        unique_together = (("name", "organization"))
 
     def __unicode__(self):
         return self.name

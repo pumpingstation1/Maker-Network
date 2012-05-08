@@ -6,13 +6,14 @@
 <div class="row">
 <div class="span10">
 <h3>
+{% with view_user.get_profile as profile %}
+
 {% with view_user.get_full_name as fullname %}
 {% if fullname %} 
 {{ fullname|escape }}
 ({% endif %}{{ view_user.username|escape }}{% if fullname %}){% endif %}
-{% endwith %}
+{% endwith %}{% if profile.location %} - {{ profile.location|escape}}{% endif %}
 </h3>
-{% with view_user.get_profile as profile %}
 <h4>About Me</h4>
 <p>{{ profile.bio|escape }}</p>
 <p>Interests: {{ profile.interests.all|join:', '|escape }}</p>
