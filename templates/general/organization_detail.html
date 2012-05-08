@@ -28,10 +28,18 @@
 </div>
 <div class="row">
     <div class="span8">
+        <h3>Working Groups</h3>
+        <ul>
+        {% for workinggroup in org.workinggroup_set.all %}
+            <li><a href="{% url workinggroup_view workinggroup.id %}">{{ workinggroup.name|escape }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="span8">
         <h3>Members</h3>
         <ul>
         {% for member in org.members.all %}
-            <li><a href="{% url profile_view member.username %}">{% if member.get_full_name %} {{ member.get_full_name }}{% else %} {{ member.username }} {% endif %}</a></li>
+            <li><a href="{% url profile_view member.username %}">{% if member.get_full_name %} {{ member.get_full_name|escape }}{% else %} {{ member.username|escape }} {% endif %}</a></li>
         {% endfor %}
         </ul>
     </div>
