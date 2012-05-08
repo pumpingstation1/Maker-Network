@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h3>{{ project.name|escape }}</h3>
-A project of <a href="{% url workinggroup_view project.workinggroup.id %}">{{ project.workinggroup.name|escape }}</a>
+A project of <a href="{% url workinggroup_view project.workinggroup.id %}">{{ project.workinggroup|escape }}</a>
 <div>
 {{ project.description|escape }}
 </div>
