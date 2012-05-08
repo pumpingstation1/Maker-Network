@@ -14,6 +14,9 @@ from django.contrib.auth.models import User
 import general.models as models
 import general.forms as forms
 
+def nope(request) :
+    return render_to_response('general/need_more_privs.html', locals(), context_instance=RequestContext(request))
+
 def view_profile(request, username):
     view_user = get_object_or_404(User, username=username)
     return render_to_response('general/userprofile_detail.html', locals(), context_instance=RequestContext(request))
@@ -31,7 +34,8 @@ def view_project(request, id):
     project = get_object_or_404(models.Project, id=id)
     
     if not project.can_user(request.user, models.Project.P_READ) :
-        raise Http404
+        return nope(request)
+    
     return render_to_response('general/project_detail.html', locals(), context_instance=RequestContext(request))
 
 @csrf_protect
