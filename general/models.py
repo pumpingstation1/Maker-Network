@@ -86,6 +86,8 @@ class WorkingGroup(models.Model) :
     name = models.CharField(max_length=64, unique=True)
     organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
     members = models.ManyToManyField(User, related_name="working_groups")
+    # membership can only be managed by people who are already in the working group. people cannot add themselves.
+    closed = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.name
@@ -93,6 +95,20 @@ class WorkingGroup(models.Model) :
 class Project(models.Model) :
     name = models.CharField(max_length=64)
     workinggroup = models.ForeignKey(WorkingGroup, on_delete=models.PROTECT)
+
+    ACC_OPEN = 0
+    ACC_WATCHABLE = 1
+    ACC_PRIVATE = 2
+
+    ACC_CHOICES = [
+        (ACC_OPEN, "Open"),
+        (ACC_WATCHABLE, "Watchable"),
+        (ACC_PRIVATE, "Private"),
+    ]
+
+    # everything about this project, including its existence and name, are invisible and inaccessible to people not 
+    # members of the project.
+    access = models.IntegerField(default=ACC_OPEN, choices=ACC_CHOICES)
 
     class Meta :
         unique_together = (("name", "workinggroup"))
