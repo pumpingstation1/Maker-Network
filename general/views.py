@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, render_to_response
+from django.http import Http404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -23,6 +24,14 @@ def edit_profile(request):
 def view_workinggroup(request, id):
     workinggroup = get_object_or_404(models.WorkingGroup, id=id)
     return render_to_response('general/workinggroup_detail.html', locals(), context_instance=RequestContext(request))
+
+@login_required
+def view_project(request, id):
+    project = get_object_or_404(models.Project, id=id)
+    if project.access == models.Project.ACC_PRIVATE :
+      if request.user not in project.workinggroup.members.all() :
+        raise Http404
+    return render_to_response('general/project_detail.html', locals(), context_instance=RequestContext(request))
 
 @csrf_protect
 @login_required
