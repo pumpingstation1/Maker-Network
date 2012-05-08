@@ -5,4 +5,23 @@ A working group of <a href="{% url organization_detail workinggroup.organization
 <div>
 {{ workinggroup.description|escape }}
 </div>
+
+<div class="row">
+    <div class="span8">
+        <h3>Projects</h3>
+        <ul>
+        {% for project in workinggroup.project_set.all %}
+            <li><a href="{% url project_view project.id %}">{{ project.name|escape }}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="span8">
+        <h3>Members</h3>
+        <ul>
+        {% for member in workinggroup.members.all %}
+            <li><a href="{% url profile_view member.username %}">{% if member.get_full_name %} {{ member.get_full_name|escape }}{% else %} {{ member.username|escape }} {% endif %}</a></li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

@@ -138,7 +138,7 @@ class Project(models.Model) :
     def can_user(self, user, permission) :
         return self.can_user_multi(user, [permission])[0]
 
-    # everything about this project, including its existence and name, are invisible and inaccessible to people not 
+    # everything about this project, except its existence and name, are invisible and inaccessible to people not 
     # members of the project.
     access = models.IntegerField(default=ACC_OPEN, choices=ACC_CHOICES)
 
