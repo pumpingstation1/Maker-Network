@@ -95,7 +95,16 @@ class WorkingGroup(models.Model) :
         unique_together = (("name", "organization"))
 
     def __unicode__(self):
-        return self.name
+        return "%s of %s" % (self.name, self.organization.name)
+
+    @classmethod
+    def search(cls, q):
+        return cls.objects.all().distinct().filter(
+            Q(name__icontains=q)
+            )
+
+    def get_absolute_url(self):
+        return reverse('workinggroup_view', kwargs={'id': self.id})
 
 class Project(models.Model) :
     name = models.CharField(max_length=64)
