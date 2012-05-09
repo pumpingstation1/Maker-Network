@@ -82,12 +82,28 @@ class Organization(models.Model):
             Q(postal_code__icontains=q)
             )
 
+class Resource(models.Model):
+    name = models.CharField(max_length = 255)
+
+    def __unicode__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('resource_detail', kwargs={'object_id': self.id})
+
+    @classmethod
+    def search(cls, q):
+        return cls.objects.all().distinct().filter(
+            Q(name__icontains=q)
+            )
+
 class WorkingGroup(models.Model) :
     name = models.CharField(max_length=64)
     description = models.TextField(blank = True)
 
     organization = models.ForeignKey(Organization, on_delete=models.PROTECT)
-    members = models.ManyToManyField(User, related_name="working_groups")
+    members = models.ManyToManyField(User, related_name="working_groups") # TODO add related through to have info such as time range(s) of membership / active or inactive status? Not sure how to do that best.
+
     # membership can only be managed by people who are already in the working group. people cannot add themselves.
     closed = models.BooleanField(default=False)
 
@@ -190,6 +206,13 @@ class TaskBase(models.Model) :
 class Task(TaskBase) :
     name = models.CharField(max_length=255)
     project = models.ForeignKey(Project, on_delete=models.PROTECT)
+    # Yes, this can result in a dependency cycle. Don't write filters that hide things which haven't
+    # had their wait_on's resolved.  Instead, relish the fact that seeing the things other things are
+    # waiting on more often via the links that'll be shown will maybe convince someone to do them.
+    # Nerds always complain about this.
+    wait_on = models.ManyToManyField('self', related_name="waiting_on", null=True, blank=True)
+    skills = models.ManyToManyField(Skill, related_name="tasks_using", null=True, blank=True)
+    resources = models.ManyToManyField(Resource, related_name="tasks_using", null=True, blank=True)
 
     def __unicode__(self):
         return 'Task %s in %s' % (self.name, self.project.name)
@@ -219,22 +242,6 @@ def log_change(sender, **kwargs):
     task.save()
         
 post_save.connect(log_change, sender=TaskLog)
-
-class Resource(models.Model):
-    name = models.CharField(max_length = 255)
-
-    def __unicode__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse('resource_detail', kwargs={'object_id': self.id})
-
-    @classmethod
-    def search(cls, q):
-        return cls.objects.all().distinct().filter(
-            Q(name__icontains=q)
-            )
-
 
 admin.site.register(Resource)
 admin.site.register(Organization)
