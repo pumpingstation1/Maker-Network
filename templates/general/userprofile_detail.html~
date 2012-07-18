@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+{% if privacyok %}
+{% if view_user.get_profile.image %}
+<img src="{{ MEDIA_URL }}{{ view_user.get_profile.image }}">
+{% endif %}
+<div class="row">
+<div class="span10">
+<h3>
+{% with view_user.get_profile as profile %}
+
+{% with view_user.get_full_name as fullname %}
+{% if fullname %} 
+{{ fullname|escape }}
+({% endif %}{{ view_user.username|escape }}{% if fullname %}){% endif %}
+{% endwith %}{% if profile.location %} - {{ profile.location|escape}}{% endif %}
+</h3>
+<h4>About Me</h4>
+<p>{{ profile.bio|escape }}</p>
+<p>Interests: {{ profile.interests.all|join:', '|escape }}</p>
+{% endwith %}
+{% if user == view_user %}
+<a href="{% url profile_edit %}">Edit your profile</a>
+{% endif %}
+</div>
+<div class="span6">
+{% if view_user.get_profile.skills.all %}
+<h3>Skills</h3>
+<ul>
+    {% for skill in view_user.get_profile.skills.all %}
+    <li>{{ skill.title|escape }}</li>
+    {% endfor %}
+    <li style="list-style-type: none;"><a href="{% url skill_list %}">Add more skills</a></li>
+</ul>
+{% endif %}
+{% if view_user.organizations.all %}
+<h3>Organizations</h3>
+<ul>
+    {% for org in view_user.organizations.all %}
+    <li><a href="{% url organization_detail org.id %}">{{ org.name|escape }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if view_user.working_groups.all %}
+<h3>Working Groups</h3>
+<ul>
+    {% for workinggroup in view_user.working_groups.all %}
+    <li><a href="{% url workinggroup_view workinggroup.id %}">{{ workinggroup.name|escape }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+</div>
+</div>
+{% else %}
+This user's profile has privacy restrictions that prevent you from viewing it. Sorry!
+{% endif %}
+{% endblock content %}
