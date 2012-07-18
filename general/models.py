@@ -37,6 +37,7 @@ class UserProfile(models.Model):
     #skills = models.ManyToManyField(Skill, related_name='user_profiles', null=True, blank=True)
     avatar = models.ImageField(upload_to='/avatars/', blank=True, null=True)
     bg_image = models.ImageField(upload_to='/bg_images/', blank=True, null=True, verbose_name="Background image")
+    privacy_groupsonly = models.BooleanField(default=False, verbose_name="Enhanced privacy")    
 
     def __unicode__(self):
         return self.user.__unicode__()

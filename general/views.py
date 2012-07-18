@@ -19,7 +19,22 @@ def nope(request) :
 
 def view_profile(request, username):
     view_user = get_object_or_404(User, username=username)
-    return render_to_response('general/userprofile_detail.html', locals(), context_instance=RequestContext(request))
+    datadict = locals()
+
+    profile = view_user.get_profile()
+    privacyok = False
+    if profile.privacy_groupsonly :
+        if request.user.is_authenticated() :
+            lu = request.user
+            for org in view_user.organizations.all() :
+                if lu in org.members.all() :
+                    privacyok = True
+                    break
+    else :
+        privacyok = True
+
+    datadict['privacyok'] = privacyok
+    return render_to_response('general/userprofile_detail.html', datadict, context_instance=RequestContext(request))
 
 @csrf_protect
 @login_required
