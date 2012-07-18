@@ -191,10 +191,10 @@ class TaskBase(models.Model) :
 
     description = models.TextField(blank=True, null=True)
     state = models.IntegerField(default=STATE_NEW, blank=True, null=True, choices=[
-      (STATE_NEW, 'New'),
-      (STATE_WONT, 'Won\'t Fix'),
-      (STATE_DONE, 'Done'),
-      (STATE_REOPENED, 'Reopened'),
+      (STATE_NEW, "New"),
+      (STATE_WONT, "Won't Fix"),
+      (STATE_DONE, "Done"),
+      (STATE_REOPENED, "Reopened"),
     ])
 
     creator = models.ForeignKey(User, on_delete=models.PROTECT, related_name='+')
@@ -241,7 +241,15 @@ def log_change(sender, **kwargs):
 
     task.ts = long(time.time())
     task.save()
-        
+
+"""
+def check_change(sender, **kwargs):
+    tasklog = kwargs['instance']
+    task = tasklog.task
+    if tasklog.state == TaskBase.STATE_NEW :
+    """"
+
+#pre_save.connect(check_change, sender=TaskLog)
 post_save.connect(log_change, sender=TaskLog)
 
 admin.site.register(Resource)
