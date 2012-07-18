@@ -5,7 +5,7 @@ import os, os.path
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # Local time zone for this installation. Choices can be found here:

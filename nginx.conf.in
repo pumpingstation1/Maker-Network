@@ -29,7 +29,7 @@ http {
 
         location /admin/media/ {
             autoindex on;
-            alias {{virtualenv}}/lib/python2.6/site-packages/django/contrib/admin/static/;
+            alias {{virtualenv}}/lib/python2.7/site-packages/django/contrib/admin/static/;
         }
         location /media/ {
             autoindex on;
