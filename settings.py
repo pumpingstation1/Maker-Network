@@ -5,7 +5,7 @@ import os, os.path
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 # Local time zone for this installation. Choices can be found here:
@@ -96,9 +96,6 @@ LOGIN_REDIRECT_URL = '/'
 #COMMENTS_APP = 'threadedcomments'
 #COMMENT_MAX_LENGTH = 3000
 
-try:
-    from local_settings import *
-except ImportError:
-    pass
+from local_settings import *
 
 MANAGERS = ADMINS

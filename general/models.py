@@ -242,14 +242,6 @@ def log_change(sender, **kwargs):
     task.ts = long(time.time())
     task.save()
 
-"""
-def check_change(sender, **kwargs):
-    tasklog = kwargs['instance']
-    task = tasklog.task
-    if tasklog.state == TaskBase.STATE_NEW :
-    """"
-
-#pre_save.connect(check_change, sender=TaskLog)
 post_save.connect(log_change, sender=TaskLog)
 
 admin.site.register(Resource)
